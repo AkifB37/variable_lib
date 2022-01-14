@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/AkifB37/variable_lib/issues"
   },
-  "homepage": "https://github.com/AkifB37/variable_lib#readme"
+  "homepage": "https://github.com/AkifB37/variable_lib#readme",
+  "dependencies": {
+    "@types/node": "^16.7.4"
+  }
 }
