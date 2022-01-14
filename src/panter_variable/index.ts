@@ -1,6 +1,8 @@
-import {Readable} from "stream";
+//import {Readable} from "stream";
 import PanterString from "./string";
-import PanterNumber from "./number";
+
+
+
 
 export enum FilterTypes {
     EMAIL,
@@ -34,9 +36,11 @@ class Variable{
             }
             switch (type){
                 case ClearTypes.INT:
+                    // @ts-ignore
                     variable = Number.parseInt(Variable.filter_var(variable, FilterTypes.INT));
                     break;
                 case ClearTypes.FLOAT:
+                    // @ts-ignore
                     variable = Number.parseFloat(Variable.filter_var(variable, FilterTypes.FLOAT));
                     break;
                 case ClearTypes.ALPHABETS:
@@ -57,7 +61,9 @@ class Variable{
     clear_all_data(data: object | any, not_column: Array<string> = []) : object | any {
         if(!this.isset(() => data)) return false;
 
+        // @ts-ignore
         for (let [key, _1] of Object.entries(data)) {
+            // @ts-ignore
             if (not_column.includes(key)) continue;
             let clear_type = ClearTypes.STRING;
             if(!this.empty(_1)) {
@@ -80,6 +86,7 @@ class Variable{
     };
 
     array_find(array: Array<any>, key: string, value: string){
+        // @ts-ignore
         return array.find(function(data, index){
             data._index = index;
             return ((key === "") ? data : data[key]) == value
@@ -88,9 +95,11 @@ class Variable{
 
     array_find_multi(array: Array<any>, key: string, value: any){
         let founds = Array();
+        // @ts-ignore
         array.find(function(data, index){
             // @ts-ignore
             let query = ((Array.isArray(value)) ? value.includes(((key === "") ? data : data[key])) : ((key === "") ? data : data[key]) == value);
+            // @ts-ignore
             data = Object.assign(data, {_index: index});
             if(query) founds.push(data);
         });
