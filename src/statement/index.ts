@@ -11,6 +11,7 @@ class Statement{
             default_value = null;
 
         for (let [key, value] of Object.entries(_case)) {
+            if (value.length !== 2 || typeof value[1] !== `function`) continue;
             key = value[0];
             if(key === "default" && result === null) {
                 default_value = value[1];
