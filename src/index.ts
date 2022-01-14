@@ -1,12 +1,20 @@
-import V, {DateMask} from "./panter_variable";
-
+import V, {DateMask} from "./variable";
+import S from "./statement";
 (new V())
 
 let string = `test`;
+string.replaceAll(`t`, `e`);
+
 let number = 10;
+number.isInt();
 
-console.log(string.replaceAll(`t`, `e`));
+let c = S.Switch(number, [
+    [1, () => false],
+    [2, () => false],
+    [10, () => true],
+])
 
-console.log(number.toFixed(2))
-console.log(number.isInt())
+S.Foreach([0,2,3], (key: any, value: any) => {
+    console.log(value)
+})
 
