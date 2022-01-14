@@ -1,4 +1,4 @@
-//import {Readable} from "stream";
+import {Readable} from "stream";
 import PanterString from "./string";
 import PanterNumber from "./number";
 
