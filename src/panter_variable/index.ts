@@ -1,8 +1,8 @@
-//import {Readable} from "stream";
-import PanterString from "./string";
-
-
-
+import {Readable} from "stream";
+import "./number";
+import "./string";
+import "./array";
+import {DateMask} from "./date";
 
 export enum FilterTypes {
     EMAIL,
@@ -17,17 +17,9 @@ export enum ClearTypes {
     SEO_URL,
     ALPHABETS
 }
-export enum SortTypes {
-    ASC,
-    DESC
-}
-export enum DateMask {
-    ALL = "yyyy-mm-dd HH:MM:ss",
-    UNIFIED_ALL = "yyyymmddHHMMss"
-}
 
 class Variable{
-    clear(variable: any, type: ClearTypes = ClearTypes.STRING, clear_html_tags = false) : any {
+    static clear(variable: any, type: ClearTypes = ClearTypes.STRING, clear_html_tags = false) : any {
         variable = (typeof variable != "undefined") ? variable : null;
         if(variable !== null){
             variable = (clear_html_tags) ? Variable.strip_tags(variable) : variable;
@@ -58,7 +50,7 @@ class Variable{
         return variable;
     }
 
-    clear_all_data(data: object | any, not_column: Array<string> = []) : object | any {
+    static clear_all_data(data: object | any, not_column: Array<string> = []) : object | any {
         if(!this.isset(() => data)) return false;
 
         // @ts-ignore
@@ -79,65 +71,7 @@ class Variable{
         return data;
     }
 
-    array_index_of(array: Array<any>, key: string, value: any){
-        return array.map(data => {
-            return (key === "") ? data : (this.isset(()=> data[key]) ? data[key] : -1);
-        }).indexOf(value);
-    };
-
-    array_find(array: Array<any>, key: string, value: string){
-        // @ts-ignore
-        return array.find(function(data, index){
-            data._index = index;
-            return ((key === "") ? data : data[key]) == value
-        });
-    };
-
-    array_find_multi(array: Array<any>, key: string, value: any){
-        let founds = Array();
-        // @ts-ignore
-        array.find(function(data, index){
-            // @ts-ignore
-            let query = ((Array.isArray(value)) ? value.includes(((key === "") ? data : data[key])) : ((key === "") ? data : data[key]) == value);
-            // @ts-ignore
-            data = Object.assign(data, {_index: index});
-            if(query) founds.push(data);
-        });
-        return founds;
-    };
-
-    array_find_multi_for_object(obj: Array<any>, find: any){
-        let query = '';
-        for (const key in find) query += `a['${key}']=='${find[key]}' && `
-        query = query.slice(0,-3)
-        return obj.filter(a => eval(query));
-    }
-
-    array_sort(array: Array<any>, key: string, sort_type: SortTypes = SortTypes.ASC){
-        return array.sort(function (a, b) {
-            if (!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) {
-                // property doesn't exist on either object
-                return 0;
-            }
-
-            const varA = (typeof a[key] === 'string')
-                ? a[key].toUpperCase() : a[key];
-            const varB = (typeof b[key] === 'string')
-                ? b[key].toUpperCase() : b[key];
-
-            let comparison = 0;
-            if (varA > varB) {
-                comparison = 1;
-            } else if (varA < varB) {
-                comparison = -1;
-            }
-            return (
-                (sort_type === SortTypes.DESC) ? (comparison * -1) : comparison
-            );
-        });
-    }
-
-    isset(...variable: any) : boolean{
+    static isset(...variable: any) : boolean{
         let result;
         try{
             for (let i = 0; i < variable.length; i++){
@@ -149,7 +83,7 @@ class Variable{
             return result !== undefined;
         }
     }
-    isset_default(variable: any, default_value: any) : any{
+    static isset_default(variable: any, default_value: any) : any{
         return (this.isset(variable)) ? variable() : default_value;
     }
 
@@ -160,7 +94,7 @@ class Variable{
      * Usage: { "default": () => any}
      * @returns
      */
-    switch(_value: any, _case: object = { "default":  () => false }) : any {
+    static switch(_value: any, _case: object = { "default":  () => false }) : any {
         let result = null;
         // @ts-ignore
         for (let [key, value] of Object.entries(_case)) {
@@ -180,14 +114,14 @@ class Variable{
      * @param _function
      * Usage: (key, value) => {}
      */
-    foreach(data: any, _function: Function) {
+    static foreach(data: any, _function: Function) {
         // @ts-ignore
         for (let [key, value] of Object.entries(data)) {
             _function(key, value);
         }
     }
 
-    empty(...variable: any) : boolean{
+    static empty(...variable: any) : boolean{
         for (let i = 0; i < variable.length; i++){
             if(
                 !this.isset(() => variable[i]) ||
@@ -199,122 +133,24 @@ class Variable{
         return false;
     }
 
-    convert_string_to_key(string: string){
+    static convert_string_to_key(string: string){
         return unescape(encodeURIComponent(this.clear(string.toString(), ClearTypes.SEO_URL)));
     }
 
-    remove_last_char(value:string,remove_count:number=1){
-        return value.substring(value.length-1,remove_count * -1)
-    }
-
-    diff_minutes(dt2: Date, dt1: Date) {
-        let diff =(dt2.getTime() - dt1.getTime()) / 1000;
-        diff /= 60;
-        return Math.abs(Math.round(diff));
-    }
-
-    date_format(date: Date | any, mask: string, utc: boolean = false) {
-
-        let i18n = {
-            dayNames: [
-                "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat",
-                "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
-            ],
-            monthNames: [
-                "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
-                "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
-            ]
-        };
-
-        let token = /d{1,4}|m{1,4}|yy(?:yy)?|([HhMsTt])\1?|[LloSZ]|"[^"]*"|'[^']*'/g,
-            timezone = /\b(?:[PMCEA][SDP]T|(?:Pacific|Mountain|Central|Eastern|Atlantic) (?:Standard|Daylight|Prevailing) Time|(?:GMT|UTC)(?:[-+]\d{4})?)\b/g,
-            timezoneClip = /[^-+\dA-Z]/g;
-
-        function pad(val: any, len: any = 0) : any {
-            val = String(val);
-            len = len || 2;
-            while (val.length < len) val = "0" + val;
-            return val;
-        }
-
-        // You can't provide utc if you skip other args (use the "UTC:" mask prefix)
-        if (arguments.length == 1 && Object.prototype.toString.call(date) == "[object String]" && !/\d/.test(date)) {
-            mask = date;
-            date = undefined;
-        }
-
-        // Passing date through Date applies Date.parse, if necessary
-        date = date ? new Date(date) : new Date;
-        if (isNaN(date)) throw SyntaxError("invalid date");
-
-        // Allow setting the utc argument via the mask
-        if (mask.slice(0, 4) == "UTC:") {
-            mask = mask.slice(4);
-            utc = true;
-        }
-
-        const _ = utc ? "getUTC" : "get",
-            d = date[_ + "Date"](),
-            D = date[_ + "Day"](),
-            m = date[_ + "Month"](),
-            y = date[_ + "FullYear"](),
-            H = date[_ + "Hours"](),
-            M = date[_ + "Minutes"](),
-            s = date[_ + "Seconds"](),
-            L = date[_ + "Milliseconds"](),
-            o = utc ? 0 : date.getTimezoneOffset(),
-            flags = {
-                d: d,
-                dd: pad(d),
-                ddd: i18n.dayNames[D],
-                dddd: i18n.dayNames[D + 7],
-                m: m + 1,
-                mm: pad(m + 1),
-                mmm: i18n.monthNames[m],
-                mmmm: i18n.monthNames[m + 12],
-                yy: String(y).slice(2),
-                yyyy: y,
-                h: H % 12 || 12,
-                hh: pad(H % 12 || 12),
-                H: H,
-                HH: pad(H),
-                M: M,
-                MM: pad(M),
-                s: s,
-                ss: pad(s),
-                l: pad(L, 3),
-                L: pad(L > 99 ? Math.round(L / 10) : L),
-                t: H < 12 ? "a" : "p",
-                tt: H < 12 ? "am" : "pm",
-                T: H < 12 ? "A" : "P",
-                TT: H < 12 ? "AM" : "PM",
-                // @ts-ignore
-                Z: utc ? "UTC" : (String(date).match(timezone) || [""]).pop().replace(timezoneClip, ""),
-                o: (o > 0 ? "-" : "+") + pad(Math.floor(Math.abs(o) / 60) * 100 + Math.abs(o) % 60, 4),
-                // @ts-ignore
-                S: ["th", "st", "nd", "rd"][d % 10 > 3 ? 0 : (d % 100 - d % 10 != 10) * d % 10]
-            };
-
-        return mask.replace(token, function ($0) {
-            // @ts-ignore
-            return $0 in flags ? flags[$0] : $0.slice(1, $0.length - 1);
-        });
-    };
-
-    html_encode(variable: any) : any {
+    static html_encode(variable: any) : any {
         return escape(variable); //variable.replaceAll('&', '&amp;').replaceAll('"', '&quot;').replaceAll("'", '&#039;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
     }
 
-    html_decode(variable: any) : any {
+    static html_decode(variable: any) : any {
         return unescape(variable); //return variable.replaceAll('&amp;', '&').replaceAll('&quot;', '"').replaceAll("&#039;", "'").replaceAll('&lt;', '<').replaceAll('&gt;', '>');
     }
 
-    random(min: number, max: number) : number{
+    static random(min: number, max: number) : number{
         return Math.floor(Math.random() * (max - min + 1) + min);
     };
 
     // @ts-ignore
-    buffer_to_stream(buffer: Buffer | any): Readable {
+    static buffer_to_stream(buffer: Buffer | any): Readable {
         // @ts-ignore
         const readable = new Readable()
         readable._read = () => {}
@@ -353,7 +189,7 @@ class Variable{
         return variable;
     }
 
-    private convert_seo_url(variable: any) : string{
+    private static convert_seo_url(variable: any) : string{
         variable = this.html_encode(Variable.strip_tags(variable.toString().toLowerCase().trim()));
         variable = variable.replace("'", '');
         let tr = Array('ş','Ş','ı','I','İ','ğ','Ğ','ü','Ü','ö','Ö','Ç','ç','(',')','/',':',',','!');
@@ -367,59 +203,10 @@ class Variable{
     }
 }
 
-declare global {
-    /*interface String {
-        replaceAll(find: string, replace: string): string
-        replaceArray(find: Array<string>, replace: Array<string>): string
-    }*/
-    /*interface Number {
-        isInt(): boolean
-        isFloat(): boolean
-    }*/
-    interface Date {
-        addDays(n: any): any;
-        nextDay() : any;
-        addMonths(n: any): any;
-        addYears(n: any): any;
-    }
+export {
+    DateMask
 }
 
-/*String.prototype.replaceAll = function (find: string, replace: string) : string {
-    let str = this.toString();
-    return str.replace(new RegExp(find, 'g'), replace);
-}
-String.prototype.replaceArray = function(find:Array<string>, replace:Array<string>): string {
-    let replaceString = this;
-    for (let i = 0; i < find.length; i++) {
-        replaceString = replaceString.replace(find[i], replace[i]);
-    }
-    return replaceString.toString();
-};*/
-/*
-Number.prototype.isInt = function (): boolean{
-    if (typeof this !== "number") return false;
-    let n = <number> this;
-    return Number(n) === n && n % 1 === 0;
-}
-Number.prototype.isFloat = function (): boolean{
-    if (typeof this !== "number") return false;
-    let n  = <number> this;
-    return Number(n) === n && n % 1 !== 0;
-}*/
-Date.prototype.addDays = function(n) {
-    this.setDate(this.getDate() + n);
-};
-// Can call it tomorrow if you want
-Date.prototype.nextDay = function() {
-    this.addDays(1);
-};
-Date.prototype.addMonths = function(n) {
-    this.setMonth(this.getMonth() + n);
-};
-Date.prototype.addYears = function(n) {
-    this.setFullYear(this.getFullYear() + n);
-}
-
-export default Variable.prototype;
+export default Variable;
 
 
