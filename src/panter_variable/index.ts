@@ -1,5 +1,6 @@
-import {Readable} from "stream";
+//import {Readable} from "stream";
 import PanterString from "./string";
+import PanterNumber from "./number";
 
 export enum FilterTypes {
     EMAIL,
@@ -152,6 +153,7 @@ class Variable{
      */
     switch(_value: any, _case: object = { "default":  () => false }) : any {
         let result = null;
+        // @ts-ignore
         for (let [key, value] of Object.entries(_case)) {
             if(key === "default" && result === null) {
                 result = value();
@@ -170,6 +172,7 @@ class Variable{
      * Usage: (key, value) => {}
      */
     foreach(data: any, _function: Function) {
+        // @ts-ignore
         for (let [key, value] of Object.entries(data)) {
             _function(key, value);
         }
@@ -301,7 +304,9 @@ class Variable{
         return Math.floor(Math.random() * (max - min + 1) + min);
     };
 
-    buffer_to_stream(buffer: Buffer): Readable {
+    // @ts-ignore
+    buffer_to_stream(buffer: Buffer | any): Readable {
+        // @ts-ignore
         const readable = new Readable()
         readable._read = () => {}
         readable.push(buffer)
@@ -358,10 +363,10 @@ declare global {
         replaceAll(find: string, replace: string): string
         replaceArray(find: Array<string>, replace: Array<string>): string
     }*/
-    interface Number {
+    /*interface Number {
         isInt(): boolean
         isFloat(): boolean
-    }
+    }*/
     interface Date {
         addDays(n: any): any;
         nextDay() : any;
@@ -381,7 +386,7 @@ String.prototype.replaceArray = function(find:Array<string>, replace:Array<strin
     }
     return replaceString.toString();
 };*/
-
+/*
 Number.prototype.isInt = function (): boolean{
     if (typeof this !== "number") return false;
     let n = <number> this;
@@ -391,7 +396,7 @@ Number.prototype.isFloat = function (): boolean{
     if (typeof this !== "number") return false;
     let n  = <number> this;
     return Number(n) === n && n % 1 !== 0;
-}
+}*/
 Date.prototype.addDays = function(n) {
     this.setDate(this.getDate() + n);
 };
