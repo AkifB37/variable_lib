@@ -1,26 +1,7 @@
-import "./number";
-import "./string";
-import "./array";
-import {DateMask} from "./date";
-import "./buffer";
-import "./math";
+const Variable = (function() {
+    function Variable(){}
 
-enum FilterTypes {
-    EMAIL,
-    INT,
-    FLOAT
-}
-export enum ClearTypes {
-    STRING,
-    EMAIL,
-    INT,
-    FLOAT,
-    SEO_URL,
-    ALPHABETS
-}
-
-class Variable{
-    static Clear(variable: any, type: ClearTypes = ClearTypes.STRING, clear_html_tags = false) : any {
+    Variable.Clear = function (variable, type = ClearTypes.STRING, clear_html_tags = true) {
         variable = (typeof variable != "undefined") ? variable : null;
         if(variable !== null){
             variable = (clear_html_tags) ? variable.toString().stripTags() : variable;
@@ -30,17 +11,17 @@ class Variable{
             switch (type){
                 case ClearTypes.INT:
                     // @ts-ignore
-                    variable = Number.parseInt(Variable.filter_var(variable, FilterTypes.INT));
+                    variable = Number.parseInt(filterVar(variable, FilterTypes.INT));
                     break;
                 case ClearTypes.FLOAT:
                     // @ts-ignore
-                    variable = Number.parseFloat(Variable.filter_var(variable, FilterTypes.FLOAT));
+                    variable = Number.parseFloat(filterVar(variable, FilterTypes.FLOAT));
                     break;
                 case ClearTypes.ALPHABETS:
                     variable = variable.replace(/[^a-zA-ZğüşöçİĞÜŞÖÇ\w ]/g, "");
                     break;
                 case ClearTypes.EMAIL:
-                    variable = Variable.filterVar(variable, FilterTypes.EMAIL);
+                    variable = filterVar(variable, FilterTypes.EMAIL);
                     break;
                 case ClearTypes.SEO_URL:
                     variable = variable.toString().convertSEOUrl();
@@ -51,28 +32,28 @@ class Variable{
         return variable;
     }
 
-    static ClearAllData(data: object | any, not_column: Array<string> = []) : object | any {
-        if(!this.isSet(() => data)) return false;
+    Variable.ClearAllData = function (data, not_column) {
+        if(!Variable.isSet(() => data)) return false;
 
         // @ts-ignore
         for (let [key, _1] of Object.entries(data)) {
             // @ts-ignore
             if (not_column.includes(key)) continue;
             let clear_type = ClearTypes.STRING;
-            if(!this.isEmpty(_1)) {
-                if(typeof _1 === "object"){ this.ClearAllData(_1); continue; }
+            if(!Variable.isEmpty(_1)) {
+                if(typeof _1 === "object"){ Variable.ClearAllData(_1); continue; }
                 if (!isNaN(Number(_1))){
                     if (Number(_1).isInt()) clear_type = ClearTypes.INT;
                     else if (Number(_1).isFloat()) clear_type = ClearTypes.FLOAT;
                 }
             }
-            data[key] = this.Clear(_1, clear_type, true);
+            data[key] = Variable.Clear(_1, clear_type, true);
         }
 
         return data;
     }
 
-    static isSet(...variable: any) : boolean{
+    Variable.isSet = function (...variable) {
         let result;
         try{
             for (let i = 0; i < variable.length; i++){
@@ -85,10 +66,10 @@ class Variable{
         }
     }
 
-    static isEmpty(...variable: any) : boolean{
+    Variable.isEmpty = function (...variable) {
         for (let i = 0; i < variable.length; i++){
             if(
-                !this.isSet(() => variable[i]) ||
+                !Variable.isSet(() => variable[i]) ||
                 variable[i] === null ||
                 variable[i].length === 0 ||
                 !variable[i].toString().trim()
@@ -97,11 +78,11 @@ class Variable{
         return false;
     }
 
-    static setDefault(variable: any, default_value: any) : any{
-        return (this.isSet(variable)) ? variable() : default_value;
+    Variable.setDefault = function (variable, default_value){
+        return (Variable.isSet(variable)) ? variable() : default_value;
     }
 
-    private static filterVar(variable: any, filter_type: FilterTypes) : string {
+    function filterVar(variable, filter_type) {
         let regex;
 
         // Check Filter Type
@@ -125,12 +106,21 @@ class Variable{
 
         return variable;
     }
+
+    return Variable;
+})();
+
+const FilterTypes = {
+    EMAIL: 1,
+    INT: 2,
+    FLOAT: 3
 }
 
-export {
-    DateMask
+const ClearTypes = {
+    STRING: 1,
+    EMAIL: 2,
+    INT: 3,
+    FLOAT: 4,
+    SEO_URL: 5,
+    ALPHABETS: 6
 }
-
-export default Variable;
-
-
