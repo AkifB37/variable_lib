@@ -1,5 +1,5 @@
-import V, {DateMask} from "./variable";
-import S from "./statement";
+import V, {DateMask} from "./server/variable";
+import S from "./server/statement";
 (new V())
 
 let string = `test`;
