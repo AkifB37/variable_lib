@@ -6,6 +6,6 @@
     "outDir": "./build",
     "esModuleInterop": true,
     "strict": true,
-    "lib": ["dom", "es2015", "es2016"]
+    "lib": ["dom", "ES2021",]
   }
 }
