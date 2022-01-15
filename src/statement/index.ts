@@ -10,6 +10,7 @@ class Statement{
         let result = null,
             default_value = null;
 
+        // @ts-ignore
         for (let [key, value] of Object.entries(_case)) {
             key = value[0];
             if(key === "default" && result === null) {
@@ -29,6 +30,7 @@ class Statement{
      * Usage: (key: any, value: any) => {}
      */
     static Foreach(data: any, _function: Function) {
+        // @ts-ignore
         for (let [key, value] of Object.entries(data)) {
             _function(key, value);
         }

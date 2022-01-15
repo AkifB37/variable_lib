@@ -18,27 +18,21 @@ String.prototype.replaceArray = function (find, replace) {
     }
     return replaceString.toString();
 }
-
 String.prototype.removeLastChar = function (remove_count = 1) {
-    return this.substring(this.length-1, remove_count * -1);
+    return this.slice(0,remove_count * -1);
 }
-
 String.prototype.Encode = function () {
     return escape(this.toString());
 }
-
 String.prototype.Decode = function () {
     return unescape(this.toString());
 }
-
 String.prototype.convertKey = function () {
     return unescape(encodeURIComponent(this.convertSEOUrl()));
 }
-
 String.prototype.stripTags = function () {
     return this.replace(/<\/?[^>]+>/gi, '');
 }
-
 String.prototype.convertSEOUrl = function () {
     let $this = this.toString();
     $this = $this.toString().toLowerCase().trim().stripTags().Encode();
