@@ -3,6 +3,7 @@ declare global {
         indexOfKey(key: string, value: any): Number
         findSingle(key: string, value: any): object
         findMulti(key: string, value: any): Array<any>
+        findMultiForObject(obj: Array<any>, find: any, type: 'number' | 'string'): Array<any>
         orderBy(key: string, sort_type: `asc` | `desc`): Array<any>
     }
 }
@@ -55,6 +56,21 @@ Array.prototype.orderBy = function (key, sort_type) {
             (sort_type === "desc") ? (comparison * -1) : comparison
         );
     });
+}
+Array.prototype.findMultiForObject = function (obj: Array<any>, find: any, type: 'number' | 'string' = 'string'){
+    let query = '';
+    let multi_find = false;
+    for (const key in find) {
+        if (find[key] instanceof Array && find[key].length > 0){
+            multi_find = true
+            if (type == 'string') query += `[${find[key].map((e:any)=>`'${e}'`)}].includes(a['${key}']) || `
+            if (type == "number") query += `[${find[key].map((e:any)=>`${e}`)}].includes(a['${key}']) || `
+        }else {
+            query += `a['${key}']=='${find[key]}' && `
+        }
+    }
+    query = query.slice(0,-3)
+    return obj.filter(e => eval(query));
 }
 
 export default {}
