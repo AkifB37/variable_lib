@@ -26,9 +26,7 @@ Array.prototype.findSingle = function (key, value) {
 Array.prototype.findMulti = function (key, value) {
     let founds = Array();
     this.find(function(data, index){
-        // @ts-ignore
         let query = ((Array.isArray(value)) ? value.includes(((key === "") ? data : data[key])) : ((key === "") ? data : data[key]) == value);
-        // @ts-ignore
         data = Object.assign(data, {_index: index});
         if(query) founds.push(data);
     });

@@ -2,7 +2,7 @@ let HelperToastify = (function() {
 
     function HelperToastify(){}
 
-    HelperToastify.error = function(text, timer = 7000) {
+    HelperToastify.Error = function(text, timer = 7000) {
         Toastify({
             text: `<i class="bi bi-exclamation-circle font-bold fs-4"></i> ${text}`,
             duration: timer,
@@ -13,7 +13,7 @@ let HelperToastify = (function() {
         }).showToast();
     }
 
-    HelperToastify.success = function (text, timer = 3000) {
+    HelperToastify.Success = function (text, timer = 3000) {
         Toastify({
             text: `
                 <svg class="toastify-checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
@@ -27,10 +27,6 @@ let HelperToastify = (function() {
             position: "right",
             backgroundColor: "#4fbe87",
         }).showToast();
-    }
-
-    HelperSweetAlert.close = function () {
-        Swal.close();
     }
 
     return HelperToastify;

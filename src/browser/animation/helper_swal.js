@@ -1,8 +1,8 @@
-let HelperSweetAlert = (function() {
+let HelperSwal = (function() {
 
-    function HelperSweetAlert(){}
+    function HelperSwal(){}
 
-    HelperSweetAlert.question = function (title, html, confirm_text, cancel_text, then_function = (result) => {}) {
+    HelperSwal.Question = function (title, html, confirm_text, cancel_text, then_function = (result) => {}) {
         Swal.fire({
             title: title,
             html: html,
@@ -17,7 +17,7 @@ let HelperSweetAlert = (function() {
         })
     }
 
-    HelperSweetAlert.wait = function(title, html) {
+    HelperSwal.Wait = function(title, html) {
         Swal.fire({
             title: title,
             html: html,
@@ -34,7 +34,7 @@ let HelperSweetAlert = (function() {
         });
     }
 
-    HelperSweetAlert.error = function(title, html,timer = 7500) {
+    HelperSwal.Error = function(title, html,timer = 7500) {
         Swal.fire({
             icon: "error",
             position: 'center',
@@ -45,7 +45,7 @@ let HelperSweetAlert = (function() {
         });
     }
 
-    HelperSweetAlert.success = function (title, html) {
+    HelperSwal.Success = function (title, html) {
         Swal.fire({
             icon: "success",
             position: 'center',
@@ -56,9 +56,9 @@ let HelperSweetAlert = (function() {
         });
     }
 
-    HelperSweetAlert.close = function () {
+    HelperSwal.Close = function () {
         Swal.close();
     }
 
-    return HelperSweetAlert;
+    return HelperSwal;
 })();
