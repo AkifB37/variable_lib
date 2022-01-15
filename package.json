@@ -4,9 +4,9 @@
   "description": "",
   "main": "src/index.ts",
   "scripts": {
-    "start": "nodemon --watch src/index.ts",
-    "otostart": "nodemon -e ts,js,ejs src/index.ts",
-    "build": "tsc && node build/src/index.js"
+    "start": "nodemon --watch src/test.ts",
+    "otostart": "nodemon -e ts,js,ejs src/test.ts",
+    "build": "tsc && node build/src/test.js"
   },
   "repository": {
     "type": "git",
@@ -19,6 +19,9 @@
   },
   "homepage": "https://github.com/AkifB37/variable_lib#readme",
   "dependencies": {
+    "typescript": "^4.5.4"
+  },
+  "devDependencies": {
     "@types/node": "^16.7.4"
   }
 }

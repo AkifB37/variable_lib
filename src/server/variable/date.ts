@@ -18,19 +18,15 @@ export enum DateMask {
 Date.prototype.addDays = function (n) {
     this.setDate(this.getDate() + n);
 }
-
 Date.prototype.nextDay = function () {
     this.addDays(1);
 };
-
 Date.prototype.addMonths = function (n) {
     this.setMonth(this.getMonth() + n);
 };
-
 Date.prototype.addYears = function (n) {
     this.setFullYear(this.getFullYear() + n);
 }
-
 Date.prototype.getStringWithMask = function (mask, utc = false) {
     let date: any = this;
     let i18n = {
@@ -118,7 +114,6 @@ Date.prototype.getStringWithMask = function (mask, utc = false) {
         return $0 in flags ? flags[$0] : $0.slice(1, $0.length - 1);
     });
 };
-
 Date.prototype.diffMinutes = function (date) {
     let diff =(date.getTime() - this.getTime()) / 1000;
     diff /= 60;

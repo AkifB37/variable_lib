@@ -1,3 +1,4 @@
+// @ts-ignore
 import {Readable} from "stream";
 
 declare global {
@@ -6,6 +7,7 @@ declare global {
     }
 }
 
+// @ts-ignore
 Buffer.prototype.convertToStream = function () {
     const readable = new Readable();
     readable._read = () => {};

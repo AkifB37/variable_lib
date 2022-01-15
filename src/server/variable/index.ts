@@ -1,9 +1,9 @@
 import "./number";
 import "./string";
 import "./array";
-import {DateMask} from "./date";
 import "./buffer";
 import "./math";
+import {DateMask} from "./date";
 
 enum FilterTypes {
     EMAIL,
