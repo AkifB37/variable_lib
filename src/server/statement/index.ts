@@ -6,7 +6,7 @@ class Statement{
      * Usage: [ ["default", () => any] ]
      * @returns
      */
-    static Switch(_value: any, _case: Array<Array<any>> = [ ["default",  () => false] ]) : any {
+    static Switch(_value: any, _case: Array<Array<any>>) : any {
         let result = null,
             default_value = null;
 

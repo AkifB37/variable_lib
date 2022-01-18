@@ -2,7 +2,7 @@
   "name": "variable_lib",
   "version": "1.0.0",
   "description": "",
-  "main": "src/index.ts",
+  "main": "src/test.ts",
   "scripts": {
     "start": "nodemon --watch src/test.ts",
     "otostart": "nodemon -e ts,js,ejs src/test.ts",

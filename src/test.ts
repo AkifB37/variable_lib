@@ -8,11 +8,18 @@ string.replaceAll(`t`, `e`);
 let number = 10;
 number.isInt();
 
+let date = new Date();
+console.log(date, date.getStringWithMask(DateMask.ALL));
+
 let c = S.Switch(number, [
     [1, () => false],
     [2, () => false],
     [10, () => true],
+    [`default`, () => null]
 ])
+
+console.log(c);
+
 
 S.Foreach([0,2,3], (key: any, value: any) => {
     console.log(value)
