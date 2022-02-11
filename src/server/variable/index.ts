@@ -50,7 +50,6 @@ class Variable{
 
         return variable;
     }
-
     static ClearAllData(data: object | any, not_column: Array<string> = []) : object | any {
         if(!this.isSet(() => data)) return false;
 
@@ -71,7 +70,6 @@ class Variable{
 
         return data;
     }
-
     static isSet(...variable: any) : boolean{
         let result;
         try{
@@ -84,7 +82,6 @@ class Variable{
             return result !== undefined;
         }
     }
-
     static isEmpty(...variable: any) : boolean{
         for (let i = 0; i < variable.length; i++){
             if(
@@ -96,11 +93,9 @@ class Variable{
         }
         return false;
     }
-
     static setDefault(variable: any, default_value: any) : any{
         return (this.isSet(variable)) ? variable() : default_value;
     }
-
     private static filterVar(variable: any, filter_type: FilterTypes) : string {
         let regex;
 
@@ -128,9 +123,12 @@ class Variable{
 }
 
 export {
-    DateMask
+    DateMask,
+    Variable
 }
 
-export default Variable;
+//import the module and enable
+new Variable();
+
 
 
