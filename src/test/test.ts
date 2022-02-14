@@ -1,6 +1,4 @@
-import {DateMask} from "../server/variable";
-import {Statement} from "../index";
-
+import {DateMask,Statement,ClearTypes,User,Variable} from '../index'
 
 
 let string = `test`;
