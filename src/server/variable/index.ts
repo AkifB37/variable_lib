@@ -10,7 +10,7 @@ enum FilterTypes {
     INT,
     FLOAT
 }
-export enum ClearTypes {
+enum ClearTypes {
     STRING,
     EMAIL,
     INT,
@@ -93,6 +93,15 @@ class Variable{
         }
         return false;
     }
+    static isNull(...variable: any){
+        for (let i = 0; i < variable.length; i++){
+            if(variable[i] !== null) return false;
+        }
+        return true;
+    }
+    static isNotNull(...variable: any){
+        return !Variable.isNull(variable);
+    }
     static setDefault(variable: any, default_value: any) : any{
         return (this.isSet(variable)) ? variable() : default_value;
     }
@@ -124,11 +133,14 @@ class Variable{
 
 export {
     DateMask,
-    Variable
+    FilterTypes,
+    ClearTypes
 }
-
 //import the module and enable
 new Variable();
+
+export default Variable;
+
 
 
 
